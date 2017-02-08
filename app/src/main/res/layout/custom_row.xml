@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="5dp"
+    android:layout_marginBottom="10dp">
+
+    <TextView
+        android:text="Video Title"
+        android:layout_width="304dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="5dp"
+        android:textSize="20dp"
+        android:id="@+id/videoTitle"
+        android:layout_row="0"
+        android:layout_column="1" />
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="51dp"
+        app:srcCompat="@android:color/background_light"
+        android:id="@+id/imageView"
+        android:layout_row="0"
+        android:layout_column="0"
+        android:layout_rowSpan="2"/>
+
+    <TextView
+        android:text="Video Size"
+        android:layout_width="306dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:paddingBottom="5dp"
+        android:id="@+id/videoSize"
+        android:layout_row="1"
+        android:layout_column="1" />
+</GridLayout>
