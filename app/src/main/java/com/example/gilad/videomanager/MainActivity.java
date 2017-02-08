@@ -10,11 +10,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
 public class MainActivity extends BaseActivity {
     static final String FILTER = "Hearthstone";
 
-    VideosManager vm = new VideosManager(
+    private VideosManager vm = new VideosManager(
             Environment.getExternalStorageDirectory().getPath() + "/Movies", FILTER);
 
 
@@ -23,15 +25,16 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Download Video in the future", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        populateList();
+    }
 
+    private void populateList()
+    {
+        ListView listView = (ListView) findViewById(R.id.videoList);
+
+        ListAdapter adapter = new CustomAdapter(this,vm.getVideos());
+
+        listView.setAdapter(adapter);
 
     }
 }
