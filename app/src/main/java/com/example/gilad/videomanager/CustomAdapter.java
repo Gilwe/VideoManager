@@ -17,6 +17,7 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Gilad on 08/02/2017.
@@ -24,22 +25,23 @@ import java.util.ArrayList;
 
 public class CustomAdapter extends ArrayAdapter<File> {
 
+    static List<Integer> selectedPositions = new ArrayList<Integer>();
+
     public CustomAdapter(Context context, ArrayList<File> videos) {
 
-        super(context,R.layout.custom_row ,videos);
+        super(context, R.layout.custom_row, videos);
     }
 
-    static class ViewHolder
-    {
+    static class ViewHolder {
         TextView title;
         TextView size;
-        ImageView  thumbnail;
+        ImageView thumbnail;
+        ImageView selectionCB;
     }
 
     @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent)
-    {
+    public View getView(int position, View convertView, ViewGroup parent) {
         View customView = convertView;
 
         if (customView == null) {
@@ -53,6 +55,7 @@ public class CustomAdapter extends ArrayAdapter<File> {
             viewHolder.title = (TextView) customView.findViewById(R.id.videoTitle);
             viewHolder.size = (TextView) customView.findViewById(R.id.videoSize);
             viewHolder.thumbnail = (ImageView) customView.findViewById(R.id.imageView);
+            viewHolder.selectionCB = (ImageView) customView.findViewById(R.id.selectedImage);
 
             customView.setTag(viewHolder);
         }
@@ -63,11 +66,14 @@ public class CustomAdapter extends ArrayAdapter<File> {
         // Setting the custom row with values
         holder.title.setText(file.getName());
         holder.size.setText(getFileSize(file));
-        if (holder.thumbnail != null)
-        {
+        if (holder.thumbnail != null) {
             new ImageDownloaderTask(holder.thumbnail).execute(file.getAbsolutePath());
         }
 
+        if (this.selectedPositions.contains(position))
+            holder.selectionCB.setVisibility(View.VISIBLE);
+        else
+            holder.selectionCB.setVisibility(View.INVISIBLE);
 
         return customView;
     }
@@ -103,8 +109,7 @@ public class CustomAdapter extends ArrayAdapter<File> {
         }
     }
 
-    private String getFileSize(File file)
-    {
+    private String getFileSize(File file) {
         DecimalFormat df = new DecimalFormat("0.00");
 
         float sizeKb = 1024.0f;
@@ -114,13 +119,13 @@ public class CustomAdapter extends ArrayAdapter<File> {
         long rawSize = file.length();
 
 
-        if ( rawSize < sizeMb )
-            return df.format( rawSize / sizeKb ) + " KB";
+        if (rawSize < sizeMb)
+            return df.format(rawSize / sizeKb) + " KB";
 
         else if (rawSize < sizeGb)
-            return df.format( rawSize / sizeMb ) + " MB";
+            return df.format(rawSize / sizeMb) + " MB";
         else
-            return df.format( rawSize / sizeGb ) + " GB";
+            return df.format(rawSize / sizeGb) + " GB";
     }
 
 

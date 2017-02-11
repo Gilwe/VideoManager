@@ -4,18 +4,27 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginLeft="5dp"
-    android:layout_marginBottom="10dp">
+    android:layout_marginBottom="10dp" >
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@mipmap/ic_check_box_black_24dp"
+        android:id="@+id/selectedImage"
+        android:layout_row="0"
+        android:layout_column="2"
+        android:layout_marginTop="10dp"/>
 
     <TextView
         android:text="Video Title"
-        android:layout_width="304dp"
+        android:layout_width="268dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginBottom="5dp"
-        android:textSize="20dp"
         android:id="@+id/videoTitle"
         android:layout_row="0"
-        android:layout_column="1" />
+        android:layout_column="1"
+        android:textSize="17.5dp" />
 
     <ImageView
         android:layout_width="60dp"
@@ -28,11 +37,12 @@
 
     <TextView
         android:text="Video Size"
-        android:layout_width="306dp"
+        android:layout_width="243dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:paddingBottom="5dp"
         android:id="@+id/videoSize"
         android:layout_row="1"
         android:layout_column="1" />
+
 </GridLayout>

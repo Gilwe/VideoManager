@@ -24,15 +24,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends BaseActivity {
-    static final String FILTER = "Hearthstone";
-
+    final String FILTER = "Hearthstone";
     private String[] permissionsArray =  new String[] {
         Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
-
+    private boolean selectionMode = false;
     private VideosManager vm;
-
+    Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +39,25 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
 
         populateListIfPermitted();
+        updateMenu();
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void updateMenu()
+    {
+        MenuItem deleteItem = menu.findItem(R.id.delete_video);
+        deleteItem.setVisible( selectionMode );
     }
 
     private void populateList() {
@@ -50,14 +67,50 @@ public class MainActivity extends BaseActivity {
         if (Videos.size() > 0) {
             ListView listView = (ListView) findViewById(R.id.videoList);
 
-            ListAdapter adapter = new CustomAdapter(this, vm.getVideos());
+            final ListAdapter adapter = new CustomAdapter(this, vm.getVideos());
             listView.setAdapter(adapter);
 
+            // Long click on item method
             listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                
+
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                    return false;
+
+                    selectionMode = true;
+
+                    CustomAdapter.selectedPositions.add(position);
+
+                    ((CustomAdapter) adapter).notifyDataSetChanged();
+
+                    updateMenu();
+
+                    return true;
+                }
+            });
+
+            // Normal cick on item method
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    if (selectionMode)
+                    {
+                        if (CustomAdapter.selectedPositions.contains(position))
+                        {
+                            CustomAdapter.selectedPositions.remove(
+                                    CustomAdapter.selectedPositions.indexOf(position));
+
+                            if(CustomAdapter.selectedPositions.size() == 0)
+                            selectionMode = false;
+                        }
+                        else
+                        {
+                            CustomAdapter.selectedPositions.add(position);
+                        }
+
+                        updateMenu();
+                        ((CustomAdapter) adapter).notifyDataSetChanged();
+                    }
+
                 }
             });
         }
