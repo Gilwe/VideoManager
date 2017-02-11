@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -82,7 +83,7 @@ public class CustomAdapter extends ArrayAdapter<File> {
         @Override
         protected Bitmap doInBackground(String... path) {
             return ThumbnailUtils.createVideoThumbnail(path[0],
-                    MediaStore.Images.Thumbnails.MINI_KIND);
+                    MediaStore.Images.Thumbnails.FULL_SCREEN_KIND);
         }
 
         @Override
@@ -104,18 +105,22 @@ public class CustomAdapter extends ArrayAdapter<File> {
 
     private String getFileSize(File file)
     {
-        String sSize;
-        long lSize = file.length();
+        DecimalFormat df = new DecimalFormat("0.00");
 
-        if ( lSize >= 1024) {
-            float f = (float) lSize / 1024;
-            sSize = f + " MB";
-        }
+        float sizeKb = 1024.0f;
+        float sizeMb = sizeKb * sizeKb;
+        float sizeGb = sizeMb * sizeKb;
+
+        long rawSize = file.length();
+
+
+        if ( rawSize < sizeMb )
+            return df.format( rawSize / sizeKb ) + " KB";
+
+        else if (rawSize < sizeGb)
+            return df.format( rawSize / sizeMb ) + " MB";
         else
-            sSize = lSize + " KB";
-
-
-        return sSize;
+            return df.format( rawSize / sizeGb ) + " GB";
     }
 
 
