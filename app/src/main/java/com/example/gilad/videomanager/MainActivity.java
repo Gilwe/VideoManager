@@ -15,9 +15,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,18 +40,28 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
 
         populateListIfPermitted();
+
     }
 
     private void populateList() {
 
-        vm = new VideosManager(
-                Environment.getExternalStorageDirectory().getPath() + "/Movies", FILTER);
+        ArrayList<File> Videos = vm.getVideos();
 
-        ListView listView = (ListView) findViewById(R.id.videoList);
+        if (Videos.size() > 0) {
+            ListView listView = (ListView) findViewById(R.id.videoList);
 
-        ListAdapter adapter = new CustomAdapter(this, vm.getVideos());
+            ListAdapter adapter = new CustomAdapter(this, vm.getVideos());
+            listView.setAdapter(adapter);
 
-        listView.setAdapter(adapter);
+            listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                    return false;
+                }
+            });
+        }
+
     }
 
     private void populateListIfPermitted()
@@ -88,7 +100,10 @@ public class MainActivity extends BaseActivity {
             }
         }
 
-        if (bAcceptedAll)
+        if (bAcceptedAll) {
+            vm = new VideosManager(
+                    Environment.getExternalStorageDirectory().getPath() + "/Movies", FILTER);
             populateList();
+        }
     }
 }

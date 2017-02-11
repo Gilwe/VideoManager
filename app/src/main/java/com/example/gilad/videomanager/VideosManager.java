@@ -32,7 +32,7 @@ public class VideosManager {
     private void loadVideosFromPath()
     {
 
-        //videos.clear();
+        videos.clear();
 
         File f = new File(path);
         int i = 0;
