@@ -25,7 +25,7 @@ import java.util.List;
 
 public class CustomAdapter extends ArrayAdapter<File> {
 
-    static List<Integer> selectedPositions = new ArrayList<Integer>();
+    static ArrayList<Integer> selectedPositions = new ArrayList<Integer>();
 
     public CustomAdapter(Context context, ArrayList<File> videos) {
 
@@ -65,7 +65,7 @@ public class CustomAdapter extends ArrayAdapter<File> {
 
         // Setting the custom row with values
         holder.title.setText(file.getName());
-        holder.size.setText(getFileSize(file));
+        holder.size.setText(getFilesSize(file));
         if (holder.thumbnail != null) {
             new ImageDownloaderTask(holder.thumbnail).execute(file.getAbsolutePath());
         }
@@ -109,15 +109,17 @@ public class CustomAdapter extends ArrayAdapter<File> {
         }
     }
 
-    private String getFileSize(File file) {
+    public static String getFilesSize(File... files) {
         DecimalFormat df = new DecimalFormat("0.00");
+
+        long rawSize = 0;
 
         float sizeKb = 1024.0f;
         float sizeMb = sizeKb * sizeKb;
         float sizeGb = sizeMb * sizeKb;
 
-        long rawSize = file.length();
-
+        for (File file: files)
+            rawSize += file.length();
 
         if (rawSize < sizeMb)
             return df.format(rawSize / sizeKb) + " KB";

@@ -1,6 +1,7 @@
 package com.example.gilad.videomanager;
 
 import android.provider.MediaStore;
+import android.widget.ListAdapter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -27,6 +28,29 @@ public class VideosManager {
     // Getters
     public ArrayList<File> getVideos() {
         return videos;
+    }
+
+    public File[] getVideosByPosition(ArrayList<Integer> positions)
+    {
+        File[] selFiles = new File[positions.size()];
+        int i = 0;
+
+        for (int pos: positions)
+            selFiles[i++] = videos.get(pos);
+
+        return selFiles;
+    }
+
+    public void deleteFilesByPosition(ArrayList<Integer> positions, ListAdapter adapter)
+    {
+        File file;
+
+        for (int pos: positions) {
+            file = videos.get(pos);
+            ((CustomAdapter) adapter).remove(file); // Remove from UI list
+            videos.remove(pos);       // Remove from app memory
+            file.delete();             // Remove from storage
+        }
     }
 
     private void loadVideosFromPath()

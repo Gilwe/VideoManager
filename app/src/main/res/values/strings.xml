@@ -2,4 +2,6 @@
     <string name="app_name">VideoManager</string>
     <string name="action_settings">Settings</string>
     <string name="delete_video">Delete selected videos</string>
+    <string name="delete_warning1">Deleting these vieos will free </string>
+    <string name="delete_warning2"> from the internal storage</string>
 </resources>
