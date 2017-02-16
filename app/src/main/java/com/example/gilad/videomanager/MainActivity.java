@@ -88,6 +88,9 @@ public class MainActivity extends BaseActivity {
                                 vm.deleteFilesByPosition(CustomAdapter.selectedPositions, adapter);
 
                                 CustomAdapter.selectedPositions.clear();
+
+                                selectionMode = false;
+                                updateMenu();
                             }
                         })
                         .show();

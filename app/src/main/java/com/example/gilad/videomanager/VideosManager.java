@@ -48,7 +48,7 @@ public class VideosManager {
         for (int pos: positions) {
             file = videos.get(pos);
             ((CustomAdapter) adapter).remove(file); // Remove from UI list
-            videos.remove(pos);       // Remove from app memory
+          //  videos.remove(pos);       // Remove from app memory
             file.delete();             // Remove from storage
         }
     }
