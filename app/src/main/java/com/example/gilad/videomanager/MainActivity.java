@@ -20,6 +20,8 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import com.afollestad.materialdialogs.*;
 
 import java.io.File;
@@ -72,8 +74,8 @@ public class MainActivity extends BaseActivity {
 
 
                 // Set deleting message
-                String msg = getResources().getString(R.string.delete_warning1) +
-                        "<b>" + CustomAdapter.getFilesSize(selectedFiles) + "</b>"
+                String msg = getResources().getString(R.string.delete_warning1) + " " +
+                "<b>" + CustomAdapter.getFilesSize(selectedFiles) + "</b>" + " "
                     + getResources().getString(R.string.delete_warning2);
 
                 nSelected = CustomAdapter.selectedPositions.size();
@@ -85,7 +87,9 @@ public class MainActivity extends BaseActivity {
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                vm.deleteFilesByPosition(CustomAdapter.selectedPositions, adapter);
+                                vm.deleteFiles(selectedFiles, adapter);
+
+                                Toast.makeText(MainActivity.this, getResources().getString(R.string.after_delete_msg),Toast.LENGTH_LONG).show();
 
                                 CustomAdapter.selectedPositions.clear();
 

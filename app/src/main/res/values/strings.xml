@@ -4,4 +4,5 @@
     <string name="delete_video">Delete selected videos</string>
     <string name="delete_warning1">Deleting these vieos will free </string>
     <string name="delete_warning2"> from the internal storage</string>
+    <string name="after_delete_msg">Videos deleted successfully</string>
 </resources>

@@ -41,12 +41,10 @@ public class VideosManager {
         return selFiles;
     }
 
-    public void deleteFilesByPosition(ArrayList<Integer> positions, ListAdapter adapter)
+    public void deleteFiles(File[] files, ListAdapter adapter)
     {
-        File file;
 
-        for (int pos: positions) {
-            file = videos.get(pos);
+        for (File file: files) {
             ((CustomAdapter) adapter).remove(file); // Remove from UI list
           //  videos.remove(pos);       // Remove from app memory
             file.delete();             // Remove from storage

@@ -13,6 +13,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+//import com.daimajia.androidanimations;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
+
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
@@ -70,8 +74,12 @@ public class CustomAdapter extends ArrayAdapter<File> {
             new ImageDownloaderTask(holder.thumbnail).execute(file.getAbsolutePath());
         }
 
-        if (this.selectedPositions.contains(position))
+        if (this.selectedPositions.contains(position)) {
             holder.selectionCB.setVisibility(View.VISIBLE);
+            YoYo.with(Techniques.FadeIn)
+                    .duration(700)
+                    .playOn(holder.selectionCB);
+        }
         else
             holder.selectionCB.setVisibility(View.INVISIBLE);
 
