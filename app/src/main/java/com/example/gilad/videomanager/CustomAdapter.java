@@ -1,5 +1,6 @@
 package com.example.gilad.videomanager;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
@@ -61,10 +62,13 @@ public class CustomAdapter extends ArrayAdapter<File> {
             viewHolder.thumbnail = (ImageView) customView.findViewById(R.id.imageView);
             viewHolder.selectionCB = (ImageView) customView.findViewById(R.id.selectedImage);
 
+            // Invisible by default
+            viewHolder.selectionCB.setVisibility(View.INVISIBLE);
+
             customView.setTag(viewHolder);
         }
 
-        ViewHolder holder = (ViewHolder) customView.getTag();
+        final ViewHolder holder = (ViewHolder) customView.getTag();
         File file = getItem(position);
 
         // Setting the custom row with values
@@ -75,14 +79,31 @@ public class CustomAdapter extends ArrayAdapter<File> {
         }
 
         if (this.selectedPositions.contains(position)) {
-            holder.selectionCB.setVisibility(View.VISIBLE);
-            YoYo.with(Techniques.FadeIn)
-                    .duration(700)
-                    .playOn(holder.selectionCB);
-        }
-        else
-            holder.selectionCB.setVisibility(View.INVISIBLE);
 
+            if (holder.selectionCB.getVisibility() == View.INVISIBLE) {
+                YoYo.with(Techniques.FadeIn)
+                        .duration(400)
+                        .playOn(holder.selectionCB);
+            }
+
+            holder.selectionCB.setVisibility(View.VISIBLE);
+        }
+        else {
+
+            if (holder.selectionCB.getVisibility() == View.VISIBLE)
+                YoYo.with(Techniques.FadeOut)
+                        .duration(200)
+                        .onEnd(new YoYo.AnimatorCallback() {
+                            @Override
+                             public void call(Animator animator) {
+                                  holder.selectionCB.setVisibility(View.INVISIBLE);
+                             }})
+
+                        .playOn(holder.selectionCB)
+                        ;
+
+
+        }
         return customView;
     }
 
