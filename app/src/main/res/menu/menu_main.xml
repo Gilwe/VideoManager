@@ -7,7 +7,7 @@
         android:id="@+id/action_settings"
         android:orderInCategory="3"
         android:title="@string/action_settings"
-        android:icon="@mipmap/ic_settings_black_24dp"
+        android:icon="@mipmap/ic_settings_black_36dp"
         app:showAsAction="always" />
     <item
         android:id="@+id/delete_video"
