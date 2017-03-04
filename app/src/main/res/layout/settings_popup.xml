@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="5dp">
+
+    <TextView
+        android:id="@+id/lblFilter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="5dp"
+        android:text="Filter"
+        android:textSize="14sp" />
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="22dp"
+        android:autoText="false"
+        android:ems="10"
+        android:inputType="none"
+        android:lines="1"
+        android:minLines="0"
+        android:paddingLeft="5dp"
+        android:paddingTop="0dp"
+        android:selectAllOnFocus="false"
+        android:singleLine="false"
+        android:text="Name"
+        android:textSize="18sp" />
+
+    <Switch
+        android:id="@+id/swtAll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="22dp"
+        android:paddingLeft="5dp"
+        android:text="All folders"
+        android:textColor="?android:attr/colorControlNormal"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/lblFolder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dp"
+        android:text="Get videos from folder"
+        android:textColor="?attr/colorControlNormal"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/txtSlectedFolder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dp"
+        android:text="TextView"
+        android:textColor="?attr/actionMenuTextColor"
+        android:textSize="18sp" />
+</LinearLayout>

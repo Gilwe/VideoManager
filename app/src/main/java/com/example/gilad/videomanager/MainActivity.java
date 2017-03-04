@@ -30,9 +30,9 @@ import java.util.List;
 
 public class MainActivity extends BaseActivity {
     final String FILTER = "Hearthstone";
-    private String[] permissionsArray =  new String[] {
-        Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
+    private String[] permissionsArray = new String[]{
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
     private boolean selectionMode = false;
@@ -64,10 +64,26 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId())
-        {
-            case (R.id.delete_video):
-            {
+
+        switch (item.getItemId()) {
+            case (R.id.action_settings): {
+                new MaterialDialog.Builder(this)
+                        .title("Settings")
+                        .customView(R.layout.settings_popup, true)
+                        .positiveText("Apply")
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                            }
+                        })
+                        .show();
+
+                break;
+
+            }
+
+            case (R.id.delete_video): {
                 int nSelected = 0;
                 String nTotalSize;
                 final File[] selectedFiles = vm.getVideosByPosition(CustomAdapter.selectedPositions);
@@ -75,8 +91,8 @@ public class MainActivity extends BaseActivity {
 
                 // Set deleting message
                 String msg = getResources().getString(R.string.delete_warning1) + " " +
-                "<b>" + CustomAdapter.getFilesSize(selectedFiles) + "</b>" + " "
-                    + getResources().getString(R.string.delete_warning2);
+                        "<b>" + CustomAdapter.getFilesSize(selectedFiles) + "</b>" + " "
+                        + getResources().getString(R.string.delete_warning2);
 
                 nSelected = CustomAdapter.selectedPositions.size();
 
@@ -84,12 +100,13 @@ public class MainActivity extends BaseActivity {
                         .title("Deleting " + nSelected + " Videos")
                         .content(Html.fromHtml(msg))
                         .positiveText("Agree")
+
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 vm.deleteFiles(selectedFiles, adapter);
 
-                                Toast.makeText(MainActivity.this, getResources().getString(R.string.after_delete_msg),Toast.LENGTH_LONG).show();
+                                Toast.makeText(MainActivity.this, getResources().getString(R.string.after_delete_msg), Toast.LENGTH_LONG).show();
 
                                 CustomAdapter.selectedPositions.clear();
 
@@ -105,11 +122,11 @@ public class MainActivity extends BaseActivity {
     }
 
 
-    private void updateMenu()
-    {
+    private void updateMenu() {
 
         MenuItem deleteItem = menu.findItem(R.id.delete_video);
-        deleteItem.setVisible( selectionMode );
+        if (deleteItem != null)
+        deleteItem.setVisible(selectionMode);
     }
 
     private void populateList() {
@@ -136,6 +153,11 @@ public class MainActivity extends BaseActivity {
 
                     updateMenu();
 
+                    // Change toolbars
+                    menu.clear();
+                    setTitle("");
+                    getMenuInflater().inflate(R.menu.selection_mode,menu);
+
                     return true;
                 }
             });
@@ -144,18 +166,14 @@ public class MainActivity extends BaseActivity {
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if (selectionMode)
-                    {
-                        if (CustomAdapter.selectedPositions.contains(position))
-                        {
+                    if (selectionMode) {
+                        if (CustomAdapter.selectedPositions.contains(position)) {
                             CustomAdapter.selectedPositions.remove(
                                     CustomAdapter.selectedPositions.indexOf(position));
 
-                            if(CustomAdapter.selectedPositions.size() == 0)
-                            selectionMode = false;
-                        }
-                        else
-                        {
+                            if (CustomAdapter.selectedPositions.size() == 0)
+                                selectionMode = false;
+                        } else {
                             CustomAdapter.selectedPositions.add(position);
                         }
 
@@ -169,8 +187,7 @@ public class MainActivity extends BaseActivity {
 
     }
 
-    private void populateListIfPermitted()
-    {
+    private void populateListIfPermitted() {
         List<String> deniedPermissions = new ArrayList<String>();
 
         for (String curr : permissionsArray) {

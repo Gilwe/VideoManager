@@ -4,9 +4,10 @@
     tools:context="com.example.gilad.videomanager.MainActivity">
 
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/delete_video"
+        android:icon="@mipmap/ic_delete_black_36dp"
         android:orderInCategory="1"
-        android:title="@string/action_settings"
-        android:icon="@mipmap/ic_settings_black_36dp"
+        android:title="@string/delete_video"
         app:showAsAction="always" />
+
 </menu>
