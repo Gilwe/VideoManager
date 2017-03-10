@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.View;
@@ -28,7 +29,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends AppCompatActivity {
     final String FILTER = "Hearthstone";
     private String[] permissionsArray = new String[]{
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -37,9 +38,10 @@ public class MainActivity extends BaseActivity {
 
     private boolean selectionMode = false;
     private VideosManager vm;
-    Menu menu;
-    ListAdapter adapter;
-
+    private Menu menu;
+    private ListAdapter adapter;
+    private Toolbar toolbar;
+    private ActionMode actionMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,12 +50,17 @@ public class MainActivity extends BaseActivity {
 
         populateListIfPermitted();
 
+        toolbar = (Toolbar) findViewById(R.id.toolbar3);
+        setSupportActionBar(toolbar);
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
         boolean bSuper = super.onCreateOptionsMenu(menu);
+
+        getMenuInflater().inflate(R.menu.menu_main, menu);
 
         this.menu = menu;
 
@@ -83,51 +90,39 @@ public class MainActivity extends BaseActivity {
 
             }
 
-            case (R.id.delete_video): {
-                int nSelected = 0;
-                String nTotalSize;
-                final File[] selectedFiles = vm.getVideosByPosition(CustomAdapter.selectedPositions);
-
-
-                // Set deleting message
-                String msg = getResources().getString(R.string.delete_warning1) + " " +
-                        "<b>" + CustomAdapter.getFilesSize(selectedFiles) + "</b>" + " "
-                        + getResources().getString(R.string.delete_warning2);
-
-                nSelected = CustomAdapter.selectedPositions.size();
-
-                new MaterialDialog.Builder(this)
-                        .title("Deleting " + nSelected + " Videos")
-                        .content(Html.fromHtml(msg))
-                        .positiveText("Agree")
-
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                vm.deleteFiles(selectedFiles, adapter);
-
-                                Toast.makeText(MainActivity.this, getResources().getString(R.string.after_delete_msg), Toast.LENGTH_LONG).show();
-
-                                CustomAdapter.selectedPositions.clear();
-
-                                selectionMode = false;
-                                updateMenu();
-                            }
-                        })
-                        .show();
-            }
         }
 
         return true;
     }
 
-
-    private void updateMenu() {
-
-        MenuItem deleteItem = menu.findItem(R.id.delete_video);
-        if (deleteItem != null)
-        deleteItem.setVisible(selectionMode);
+    public void setNullActionMode()
+    {
+        actionMode = null;
     }
+
+    public void setSelectionMode(Boolean mode)
+    {
+        selectionMode = mode;
+    }
+
+    public void updateMenu() {
+
+        if (selectionMode)
+        {
+            if (actionMode == null)
+                // Select for the first time
+                actionMode = this.startSupportActionMode(new ToolbarActionCallback(this, this.vm, adapter));
+
+            actionMode.setTitle(String.valueOf(CustomAdapter.selectedPositions.size())
+                    + "/" + vm.getVideos().size() + " Selected");
+
+        }
+        // Cancel action mode after exiting selection mode
+        else if (actionMode != null)
+            actionMode.finish();
+
+    }
+
 
     private void populateList() {
 
@@ -152,11 +147,6 @@ public class MainActivity extends BaseActivity {
                     ((CustomAdapter) adapter).notifyDataSetChanged();
 
                     updateMenu();
-
-                    // Change toolbars
-                    menu.clear();
-                    setTitle("");
-                    getMenuInflater().inflate(R.menu.selection_mode,menu);
 
                     return true;
                 }
