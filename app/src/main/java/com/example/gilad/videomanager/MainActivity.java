@@ -4,6 +4,9 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.DialogPreference;
+import android.preference.PreferenceGroup;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -15,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,29 +34,43 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    final String FILTER = "Hearthstone";
+
     private String[] permissionsArray = new String[]{
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
+    static class Params
+    {
+       // Setting defaults at DataStorage ctor
+       static String FILTER;
+       static Boolean ALL_FOLDERS ;
+       static String SELECTED_FOLDER ;
+    }
+
+    // Private members
     private boolean selectionMode = false;
     private VideosManager vm;
+    private DataStorage storage;
     private Menu menu;
     private ListAdapter adapter;
     private Toolbar toolbar;
     private ActionMode actionMode;
+    private Params params;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        populateListIfPermitted();
-
         toolbar = (Toolbar) findViewById(R.id.toolbar3);
         setSupportActionBar(toolbar);
 
+        storage = new DataStorage(this);
+        Params params = new Params();
+        getParams();
+
+        populateListIfPermitted();
     }
 
     @Override
@@ -142,11 +160,14 @@ public class MainActivity extends AppCompatActivity {
 
                     selectionMode = true;
 
-                    CustomAdapter.selectedPositions.add(position);
+                    // Adds only unselected items
+                    if (!CustomAdapter.selectedPositions.contains(position)) {
+                        CustomAdapter.selectedPositions.add(position);
 
-                    ((CustomAdapter) adapter).notifyDataSetChanged();
+                        ((CustomAdapter) adapter).notifyDataSetChanged();
 
-                    updateMenu();
+                        updateMenu();
+                    }
 
                     return true;
                 }
@@ -213,9 +234,21 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (bAcceptedAll) {
-            vm = new VideosManager(
-                    Environment.getExternalStorageDirectory().getPath() + "/Movies", FILTER);
+
+            String path = Environment.getExternalStorageDirectory().getPath();
+
+            if (!params.ALL_FOLDERS)
+                path += params.SELECTED_FOLDER;
+
+            vm = new VideosManager( path, params.FILTER);
             populateList();
         }
+    }
+
+    private void getParams()
+    {
+       params.FILTER = storage.getString(DataStorage.KEY_FILTER);
+       params.ALL_FOLDERS = storage.getBool(DataStorage.KEY_ALL_FOLDERS);
+       params.SELECTED_FOLDER = storage.getString(DataStorage.KEY_SELECTED_FOLDER);
     }
 }

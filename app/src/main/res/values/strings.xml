@@ -5,4 +5,10 @@
     <string name="delete_warning1">Deleting these vieos will free </string>
     <string name="delete_warning2"> from the internal storage</string>
     <string name="after_delete_msg">Videos deleted successfully</string>
+
+    <!-- Defaults -->
+
+    <string name="filter">Hearthstone</string>
+    <string name="all_folders">false</string>
+    <string name="selected_folder">/Movies</string>
 </resources>

@@ -53,20 +53,26 @@ public class VideosManager {
 
     private void loadVideosFromPath()
     {
-
         videos.clear();
 
-        File f = new File(path);
-        int i = 0;
+        File file = new File(path);
 
-        for (File file : f.listFiles() ) {
-            if ( file.getName().contains(filter))
-            {
-                videos.add(file);
-                i++;
-            }
+        getFilesFromDirectory(file);
+    }
+
+    private void getFilesFromDirectory(final File folder)
+    {
+        for( final File file : folder.listFiles())
+        {
+            if (file.isDirectory())
+                getFilesFromDirectory(file);
+
+            // Videos only
+            else if (file.toString().endsWith(".mp4") &&
+                     file.getName().contains(filter))
+                 videos.add(file);
+
         }
-
     }
 
 
