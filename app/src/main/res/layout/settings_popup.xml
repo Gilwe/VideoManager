@@ -7,7 +7,7 @@
     android:paddingLeft="5dp">
 
     <TextView
-        android:id="@+id/lblFilter"
+        android:id="@+id/text_filter_labael"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
@@ -16,7 +16,7 @@
         android:textSize="14sp" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/edit_filter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="22dp"
@@ -28,12 +28,11 @@
         android:paddingLeft="5dp"
         android:paddingTop="0dp"
         android:selectAllOnFocus="false"
-        android:singleLine="false"
         android:text="Name"
         android:textSize="18sp" />
 
     <Switch
-        android:id="@+id/swtAll"
+        android:id="@+id/switch_all_folders"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="22dp"
@@ -43,7 +42,7 @@
         android:textSize="14sp" />
 
     <TextView
-        android:id="@+id/lblFolder"
+        android:id="@+id/text_folder_labal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="5dp"
@@ -52,9 +51,10 @@
         android:textSize="14sp" />
 
     <TextView
-        android:id="@+id/txtSlectedFolder"
+        android:id="@+id/text_selected_folder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="true"
         android:paddingLeft="5dp"
         android:text="TextView"
         android:textColor="?attr/actionMenuTextColor"

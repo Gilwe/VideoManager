@@ -57,10 +57,10 @@ public class CustomAdapter extends ArrayAdapter<File> {
             // Configure Viewholer
             ViewHolder viewHolder = new ViewHolder();
 
-            viewHolder.title = (TextView) customView.findViewById(R.id.videoTitle);
-            viewHolder.size = (TextView) customView.findViewById(R.id.videoSize);
-            viewHolder.thumbnail = (ImageView) customView.findViewById(R.id.imageView);
-            viewHolder.selectionCB = (ImageView) customView.findViewById(R.id.selectedImage);
+            viewHolder.title = (TextView) customView.findViewById(R.id.text_video_title);
+            viewHolder.size = (TextView) customView.findViewById(R.id.text_video_size);
+            viewHolder.thumbnail = (ImageView) customView.findViewById(R.id.image_thumbnail);
+            viewHolder.selectionCB = (ImageView) customView.findViewById(R.id.image_selected);
 
             // Invisible by default
             viewHolder.selectionCB.setVisibility(View.INVISIBLE);

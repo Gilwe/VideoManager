@@ -40,12 +40,10 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
-    static class Params
-    {
-       // Setting defaults at DataStorage ctor
-       static String FILTER;
-       static Boolean ALL_FOLDERS ;
-       static String SELECTED_FOLDER ;
+    static class Params {
+        String FILTER;
+        Boolean ALL_FOLDERS;
+        String SELECTED_FOLDER;
     }
 
     // Private members
@@ -57,17 +55,18 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private ActionMode actionMode;
     private Params params;
+    private SettingsUIHandler settingsUIHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar3);
+        toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
 
         storage = new DataStorage(this);
-        Params params = new Params();
+        params = new Params();
         getParams();
 
         populateListIfPermitted();
@@ -92,17 +91,28 @@ public class MainActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case (R.id.action_settings): {
-                new MaterialDialog.Builder(this)
+
+
+                MaterialDialog materialDialog = new MaterialDialog.Builder(this)
                         .title("Settings")
                         .customView(R.layout.settings_popup, true)
                         .positiveText("Apply")
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                if (settingsUIHandler != null) {
 
+                                    if (settingsUIHandler.updateParamsFromUI()) ;
+
+                                    // Create new list if there were changes in the settings
+                                    createNewList();
+                                }
                             }
                         })
                         .show();
+
+                settingsUIHandler = new SettingsUIHandler(materialDialog.getCustomView(), params);
+                settingsUIHandler.initUI();
 
                 break;
 
@@ -113,20 +123,17 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public void setNullActionMode()
-    {
+    public void setNullActionMode() {
         actionMode = null;
     }
 
-    public void setSelectionMode(Boolean mode)
-    {
+    public void setSelectionMode(Boolean mode) {
         selectionMode = mode;
     }
 
     public void updateMenu() {
 
-        if (selectionMode)
-        {
+        if (selectionMode) {
             if (actionMode == null)
                 // Select for the first time
                 actionMode = this.startSupportActionMode(new ToolbarActionCallback(this, this.vm, adapter));
@@ -147,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<File> Videos = vm.getVideos();
 
         if (Videos.size() > 0) {
-            ListView listView = (ListView) findViewById(R.id.videoList);
+            ListView listView = (ListView) findViewById(R.id.list_video_list);
 
             adapter = new CustomAdapter(this, vm.getVideos());
             listView.setAdapter(adapter);
@@ -198,14 +205,24 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void createNewList() {
+        String path = Environment.getExternalStorageDirectory().getPath();
+
+        if (!params.ALL_FOLDERS)
+            path += params.SELECTED_FOLDER;
+
+        vm = new VideosManager(path, params.FILTER);
+        populateList();
+    }
+
     private void populateListIfPermitted() {
         List<String> deniedPermissions = new ArrayList<String>();
 
-        for (String curr : permissionsArray) {
-            if (ContextCompat.checkSelfPermission(MainActivity.this, curr)
+        for (String permission : permissionsArray) {
+            if (ContextCompat.checkSelfPermission(MainActivity.this, permission)
                     != PackageManager.PERMISSION_GRANTED) {
 
-                deniedPermissions.add(curr);
+                deniedPermissions.add(permission);
             }
         }
 
@@ -223,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
 
         boolean bAcceptedAll = true;
 
-        // IT if it null - there are already permissions
+        //  if its null - there are already permissions
         if (permissions != null && grantResults != null) {
 
             // Goes on each result and checks if it is granted
@@ -235,20 +252,19 @@ public class MainActivity extends AppCompatActivity {
 
         if (bAcceptedAll) {
 
-            String path = Environment.getExternalStorageDirectory().getPath();
-
-            if (!params.ALL_FOLDERS)
-                path += params.SELECTED_FOLDER;
-
-            vm = new VideosManager( path, params.FILTER);
-            populateList();
+            createNewList();
         }
     }
 
-    private void getParams()
-    {
-       params.FILTER = storage.getString(DataStorage.KEY_FILTER);
-       params.ALL_FOLDERS = storage.getBool(DataStorage.KEY_ALL_FOLDERS);
-       params.SELECTED_FOLDER = storage.getString(DataStorage.KEY_SELECTED_FOLDER);
+    private void getParams() {
+        params.FILTER = storage.getString(DataStorage.KEY_FILTER);
+        params.ALL_FOLDERS = storage.getBool(DataStorage.KEY_ALL_FOLDERS);
+        params.SELECTED_FOLDER = storage.getString(DataStorage.KEY_SELECTED_FOLDER);
+    }
+
+    private void saveParams() {
+        storage.setFilter(params.FILTER);
+        storage.setAllFolders(params.ALL_FOLDERS);
+        storage.setSelectedFolder(params.SELECTED_FOLDER);
     }
 }
