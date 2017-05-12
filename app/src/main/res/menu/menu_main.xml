@@ -9,4 +9,11 @@
         android:title="@string/action_settings"
         android:icon="@mipmap/ic_settings_black_36dp"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_web"
+        android:orderInCategory="2"
+        android:title="@string/action_web"
+        android:icon="@mipmap/ic_web_black_36dp"
+        app:showAsAction="always" />
 </menu>

@@ -1,6 +1,7 @@
 package com.example.gilad.videomanager;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
@@ -12,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -58,6 +60,19 @@ public class MainActivity extends AppCompatActivity {
     private SettingsUIHandler settingsUIHandler;
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Setting the current activity for external code
+        GlobalVars.setCurActivity(this);
+
+        if (GlobalVars.foundVideo != null)
+        {
+            startDownload();
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -70,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         getParams();
 
         populateListIfPermitted();
+
     }
 
     @Override
@@ -91,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case (R.id.action_settings): {
-
 
                 MaterialDialog materialDialog = new MaterialDialog.Builder(this)
                         .title("Settings")
@@ -118,6 +133,12 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
+            case (R.id.action_web):
+                    {
+                        Intent intent = new Intent(this, WebActivity.class);
+
+                        startActivity(intent);
+                    }
         }
 
         return true;

@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.gilad.videomanager.WebActivity">
+
+    <item
+        android:id="@+id/download"
+        android:icon="@mipmap/ic_file_download_black_36dp"
+        android:orderInCategory="1"
+        android:title="@string/action_download_from_page"
+        app:showAsAction="always" />
+
+</menu>
