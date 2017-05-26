@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
+import android.os.HandlerThread;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -23,16 +24,18 @@ import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
 /**
  * Created by Gilad on 08/02/2017.
  */
 
-public class CustomAdapter extends ArrayAdapter<File> {
+public class CustomAdapter extends ArrayAdapter<VideosManager.VideoFile> {
 
     static ArrayList<Integer> selectedPositions = new ArrayList<Integer>();
 
-    public CustomAdapter(Context context, ArrayList<File> videos) {
+    public CustomAdapter(Context context, ArrayList<VideosManager.VideoFile> videos) {
 
         super(context, R.layout.custom_row, videos);
     }
@@ -69,11 +72,29 @@ public class CustomAdapter extends ArrayAdapter<File> {
         }
 
         final ViewHolder holder = (ViewHolder) customView.getTag();
-        File file = getItem(position);
+        File file = getItem(position).file;
 
         // Setting the custom row with values
         holder.title.setText(file.getName());
         holder.size.setText(getFilesSize(file));
+
+        android.os.Handler h = new android.os.Handler();
+
+        h.post(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 100; i++ ) {
+                    holder.size.setText(String.valueOf(i) + "%");
+                    try {
+                        wait(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+
         if (holder.thumbnail != null) {
             new ImageDownloaderTask(holder.thumbnail).execute(file.getAbsolutePath());
         }
@@ -119,6 +140,7 @@ public class CustomAdapter extends ArrayAdapter<File> {
         protected Bitmap doInBackground(String... path) {
             return ThumbnailUtils.createVideoThumbnail(path[0],
                     MediaStore.Images.Thumbnails.FULL_SCREEN_KIND);
+
         }
 
         @Override

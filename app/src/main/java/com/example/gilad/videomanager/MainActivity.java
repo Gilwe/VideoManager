@@ -34,6 +34,7 @@ import com.afollestad.materialdialogs.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Handler;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -172,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void populateList() {
 
-        ArrayList<File> Videos = vm.getVideos();
+        ArrayList<VideosManager.VideoFile> Videos = vm.getVideos();
 
         if (Videos.size() > 0) {
             ListView listView = (ListView) findViewById(R.id.list_video_list);

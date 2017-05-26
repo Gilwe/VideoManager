@@ -12,7 +12,21 @@ import java.util.ArrayList;
 
 public class VideosManager {
 
-    private ArrayList<File> videos = new ArrayList<File>();
+    class VideoFile
+    {
+        public File file;
+        public int downloadedPrecentage;
+
+        public boolean isDone = false;
+
+        VideoFile(File file)
+        {
+            this.file = file;
+            isDone = true;
+        }
+    }
+
+    private ArrayList<VideoFile> videos = new ArrayList<VideoFile>();
 
     private String path;
     private String filter;
@@ -26,7 +40,7 @@ public class VideosManager {
     }
 
     // Getters
-    public ArrayList<File> getVideos() {
+    public ArrayList<VideoFile> getVideos() {
         return videos;
     }
 
@@ -36,7 +50,7 @@ public class VideosManager {
         int i = 0;
 
         for (int pos: positions)
-            selFiles[i++] = videos.get(pos);
+            selFiles[i++] = videos.get(pos).file;
 
         return selFiles;
     }
@@ -70,7 +84,7 @@ public class VideosManager {
             // Videos only
             else if (file.toString().endsWith(".mp4") &&
                      file.getName().contains(filter))
-                 videos.add(file);
+                 videos.add(new VideoFile(file));
 
         }
     }
